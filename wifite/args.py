@@ -37,9 +37,6 @@ class Arguments(object):
         wps_group = parser.add_argument_group('WPS')
         self._add_wps_args(wps_group)
 
-        eviltwin_group = parser.add_argument_group('EVIL TWIN')
-        self._add_eviltwin_args(eviltwin_group)
-
         commands_group = parser.add_argument_group('COMMANDS')
         self._add_command_args(commands_group)
 
@@ -146,16 +143,6 @@ class Arguments(object):
             default=None,
             help=self._verbose('Number of deauth packets to send (default: {G}%d{W})' % self.config.num_deauths))
 
-
-    def _add_eviltwin_args(self, group):
-        group.add_argument('-ev',
-            '--eviltwin',
-            action='store_true',
-            dest='use_eviltwin',
-            help=Color.s('Use the "Evil Twin" attack against all targets (default: {G}off{W})'))
-        # TODO: Args to specify deauth interface, server port, etc.
-
-
     def _add_wep_args(self, wep):
         # WEP
         wep.add_argument('--wep',
@@ -253,7 +240,6 @@ class Arguments(object):
             help=self._verbose('Use ARP-replay WEP attack (default: {G}on{W})'))
         wep.add_argument('-hirte', help=argparse.SUPPRESS, action='store_true', dest='wep_attack_hirte')
 
-
     def _add_wpa_args(self, wpa):
         wpa.add_argument('--wpa',
             action='store_true',
@@ -307,7 +293,6 @@ class Arguments(object):
             help=Color.s('Strip unnecessary packets from handshake capture using tshark'))
         '''
         wpa.add_argument('-strip', help=argparse.SUPPRESS, action='store_true', dest='wpa_strip_handshake')
-
 
     def _add_wps_args(self, wps):
         wps.add_argument('--wps',
@@ -364,7 +349,6 @@ class Arguments(object):
             help=self._verbose('Maximum number of Timeouts before failing (default: {G}%d{W})' % self.config.wps_timeout_threshold))
         # Alias
         wps.add_argument('-wpsto', help=argparse.SUPPRESS, action='store', dest='wps_timeout_threshold', type=int)
-
 
     def _add_command_args(self, commands):
         commands.add_argument('--cracked',

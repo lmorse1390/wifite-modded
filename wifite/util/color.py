@@ -45,6 +45,7 @@ class Color(object):
 
     @staticmethod
     def pl(text):
+        # type: (object) -> object
         '''Prints text using colored format with trailing new line.'''
         Color.p('%s\n' % text)
         Color.last_sameline_length = 0

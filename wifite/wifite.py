@@ -149,12 +149,7 @@ class Wifite(object):
                      ' starting attacks against {C}%s{W} ({C}%s{W})'
                 % (t.bssid, t.essid if t.essid_known else "{O}ESSID unknown"))
 
-            # TODO: Check if Eviltwin attack is selected.
-
-            if Configuration.use_eviltwin:
-                pass
-
-            elif 'WEP' in t.encryption:
+            if 'WEP' in t.encryption:
                 attack = AttackWEP(t)
 
             elif 'WPA' in t.encryption:

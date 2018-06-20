@@ -1,5 +1,6 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
+from typing import Any, Union
 
 from ..util.process import Process
 from ..util.color import Color
@@ -11,9 +12,10 @@ from datetime import datetime
 
 import os
 
+
 class CrackHandshake(object):
     def __init__(self):
-        self.wordlist = Configuration.wordlist or "path_to_wordlist_here"
+        self.wordlist = Configuration.wordlist or "../common_wpa_sec.txt"
 
         handshake = self.choose_handshake()
         self.crack_handshake(handshake)
@@ -21,23 +23,30 @@ class CrackHandshake(object):
     def crack_handshake(self, handshake):
         cap_file = handshake["handshake_file"]
         bssid = handshake["bssid"]
+        essid_pmk = handshake["handshake_file"] + ".pmk"
+        essid_name = handshake["essid"]
         Color.pl("\n  Below are commands to crack the handshake {C}%s{W}:" % cap_file)
         self.print_aircrack(cap_file, bssid)
         self.print_pyrit(cap_file, bssid)
         self.print_john(cap_file)
         self.print_oclhashcat(cap_file)
+        self.print_genpmk(essid_pmk, essid_name, cap_file)
         Color.pl("")
-        # TODO: cowpatty(Precompute Keys), oclhashcat(Im Noob In PY As Shit, but GPU detection shouldnt be much work)
-        # TODO: Ability to export commands to a text file, or even just spawning a new shell to run an password attack, leaving the original window free for the user
+        # TODO: Ability to export commands to a text file, or even just spawning a new shell to run an password attack,
+        #  leaving the original window free for the user
+
     def print_aircrack(self, cap_file, bssid):
         Color.pl("")
         if not Process.exists("aircrack-ng"):
             Color.pl("  {R}aircrack-ng not found.");
-            Color.pl("  {O}More info on installing {R}Aircrack{O} here: {C}https://www.aircrack-ng.org/downloads.html{W}");
+            Color.pl(
+                "  {O}More info on installing {R}Aircrack{O} here: {C}https://www.aircrack-ng.org/downloads.html{W}");
             return
-        Color.pl("  {O}# AIRCRACK: CPU-based cracking. Slow.")
+        Color.pl('  {O}# AIRCRACK: CPU-based cracking. Slow.')
         Color.pl("  {G}aircrack-ng {W}-a {C}2 {W}-b {C}%s {W}-w {C}%s %s{W}" % (bssid, self.wordlist, cap_file))
+
         # TODO: When Pyrit is absent, seek to use either wash(my fav), airodump,
+
     def print_pyrit(self, cap_file, bssid):
         Color.pl("")
         if not Process.exists("pyrit"):
@@ -45,7 +54,8 @@ class CrackHandshake(object):
             Color.pl("  {O}More info on installing {R}Pyrit{O} here: {C}https://github.com/JPaulMora/Pyrit{W}");
             return
         Color.pl("  {O}# PYRIT: GPU-based cracking. Fast.")
-        Color.pl("  {G}pyrit {W}-b {C}%s {W}-i {C}%s {W}-r {C}%s {W}attack_passthrough{W}" % (bssid, self.wordlist, cap_file))
+        Color.pl("  {G}pyrit {W}-b {C}%s {W}-i {C}%s {W}-r {C}%s {W}attack_passthrough{W}" % (
+            bssid, self.wordlist, cap_file))
 
     def print_john(self, cap_file):
         Color.pl("")
@@ -59,6 +69,19 @@ class CrackHandshake(object):
         Color.pl("  {G}aircrack-ng {W}-J hccap {C}%s{W}" % cap_file)
         Color.pl("  {G}hccap2john {C}hccap.hccap {W}> {C}hccap.john{W}")
         Color.pl("  {G}john {W}--wordlist {C}\"%s\" {W}--format=wpapsk {C}\"hccap.john\"{W}" % (self.wordlist))
+
+    def print_genpmk(self, essid_pmk, essid_name, cap_file):
+        Color.pl("")
+        if not Process.exists("genpmk"):
+            Color.pl("  {R}genpmk {O}not found.")
+            Color.pl("  {O}# See {C}https://github.com/roobixx/cowpatty {O}for more info")
+            return
+        if not Process.exists("cowpatty"):
+            Color.pl("  {O}# See {C}https://github.com/roobixx/cowpatty {O}for more info")
+            return
+        Color.pl("  {O}# GENPMK/COWPATTY: https://github.com/roobixx/cowpatty. Fast as hell.")
+        Color.pl("  {G}genpmk -d {W}%s{C} -f {W}%s{C} -s {W}\"%s\" %s{C} " % (essid_pmk, self.wordlist, essid_name, cap_file))
+        Color.pl("  {G}cowpatty -d {W}%s{C} -r {W}%s{C} -s {W}\"%s\"{C}" % (essid_pmk, cap_file, essid_name))
 
     def print_oclhashcat(self, cap_file):
         Color.pl("")
@@ -81,7 +104,8 @@ class CrackHandshake(object):
 
         Color.pl("  {G}hashcat {W}-m 2500 {C}%s %s{W}" % (hccapx_file, self.wordlist))
 
-    def choose_handshake(self):
+    @staticmethod
+    def choose_handshake():
         hs_dir = Configuration.wpa_handshake_dir
         Color.pl("{+} Listing captured handshakes from {C}%s{W}\n" % os.path.realpath(hs_dir))
         handshakes = []
@@ -121,7 +145,7 @@ class CrackHandshake(object):
         for idx, hs in enumerate(handshakes, start=1):
             bssid = hs["bssid"]
             essid = hs["essid"]
-            date  = hs["date"]
+            date = hs["date"]
             Color.p("  {G}%s{W}" % str(idx).rjust(3))
             Color.p("  {C}%s{W}" % essid.ljust(max_essid_len))
             Color.p("  {O}%s{W}" % bssid)

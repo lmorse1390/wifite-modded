@@ -55,13 +55,6 @@ class Configuration(object):
 
         cls.encryption_filter = ['WEP', 'WPA', 'WPS']
 
-        # TODO: Remove all this stuff
-        # EvilTwin variables
-        cls.use_eviltwin = False
-        cls.eviltwin_port = 80
-        cls.eviltwin_deauth_iface = None
-        cls.eviltwin_fakeap_iface = None
-
         # WEP variables
         cls.wep_filter = False  # Only attack WEP networks
         cls.wep_pps = 600  # Packets per second
@@ -92,7 +85,7 @@ class Configuration(object):
             '/usr/share/fuzzdb/wordlists-user-passwd/passwds/phpbb.txt',
             '/usr/share/wordlists/fern-wifi/common.txt',
             '%fern-wifi%/common.txt',
-            "../common.txt"
+            '../common_wpa_sec.txt'
         ]
         for wlist in wordlists:
             if os.path.exists(wlist):
@@ -103,7 +96,7 @@ class Configuration(object):
         cls.wps_filter = False  # Only attack WPS networks
         cls.no_wps = False  # Do not use WPS attacks (Pixie-Dust & PIN attacks)
         cls.wps_only = False  # ONLY use WPS attacks on non-WEP networks
-        cls.use_bully = False  # Use bully instead of reaver
+        cls.use_bully = True  # Use bully instead of reaver - DEFAULT
         cls.wps_pixie_timeout = 300  # Seconds to wait for PIN before WPS Pixie attack fails
         cls.wps_fail_threshold = 100  # Max number of failures
         cls.wps_timeout_threshold = 100  # Max number of timeouts
@@ -133,9 +126,9 @@ class Configuration(object):
     def get_wireless_interface():
         pass
 
+    # TODO: This smells like shit.
     @classmethod
     def load_from_arguments(cls):
-        ''' Sets configuration values based on Argument.args object '''
         from .args import Arguments
 
         args = Arguments(cls).args
@@ -181,11 +174,6 @@ class Configuration(object):
         if args.kill_conflicting_processes:
             cls.kill_conflicting_processes = True
             Color.pl('{+} {C}option:{W} kill conflicting processes {G}enabled{W}')
-
-        # EvilTwin
-        if args.use_eviltwin:
-            cls.use_eviltwin = True
-            Color.pl('{+} {C}option:{W} using {G}eviltwin attacks{W} against all targets')
 
         # WEP
         if args.wep_filter:
