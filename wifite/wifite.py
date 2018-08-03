@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
 
 try:
@@ -20,6 +20,7 @@ from .model.handshake import Handshake
 import json
 import os
 import sys
+
 
 class Wifite(object):
 
@@ -46,7 +47,6 @@ class Wifite(object):
             Configuration.get_monitor_mode_interface()
             self.run()
 
-
     def dependency_check(self):
         ''' Check that required programs are installed '''
         from .tools.airmon import Airmon
@@ -63,17 +63,17 @@ class Wifite(object):
         from .tools.macchanger import Macchanger
 
         apps = [
-                # Aircrack
-                Airmon, Airodump, Aircrack, Aireplay,
-                # wireless/net tools
-                Iwconfig, Ifconfig,
-                # WPS
-                Reaver, Bully,
-                # Cracking/handshakes
-                Pyrit, Tshark,
-                # Misc
-                Macchanger
-            ]
+            # Aircrack
+            Airmon, Airodump, Aircrack, Aireplay,
+            # wireless/net tools
+            Iwconfig, Ifconfig,
+            # WPS
+            Reaver, Bully,
+            # Cracking/handshakes
+            Pyrit, Tshark,
+            # Misc
+            Macchanger
+        ]
 
         missing_required = any([app.fails_dependency_check() for app in apps])
 
@@ -81,7 +81,7 @@ class Wifite(object):
             Color.pl('{!} {R}required app(s) were not found, exiting.{W}')
             sys.exit(-1)
 
-        #if missing_optional:
+        # if missing_optional:
         #    Color.pl('{!} {O}recommended app(s) were not found')
         #    Color.pl('{!} {O}wifite may not work as expected{W}')
 
@@ -147,7 +147,7 @@ class Wifite(object):
 
             Color.pl('\n{+} ({G}%d{W}/{G}%d{W})' % (idx, len(targets)) +
                      ' starting attacks against {C}%s{W} ({C}%s{W})'
-                % (t.bssid, t.essid if t.essid_known else "{O}ESSID unknown"))
+                     % (t.bssid, t.essid if t.essid_known else "{O}ESSID unknown"))
 
             if 'WEP' in t.encryption:
                 attack = AttackWEP(t)
@@ -211,7 +211,6 @@ class Wifite(object):
                 attack.crack_result.save()
         Color.pl("{+} Finished attacking {C}%d{W} target(s), exiting" % attacked_targets)
 
-
     def print_banner(self):
         """ Displays ASCII art of the highest caliber.  """
         Color.pl('''\
@@ -271,6 +270,7 @@ def run():
         Color.pl('\n{!} {O}interrupted, shutting down...{W}')
 
     Configuration.exit_gracefully(0)
+
 
 if __name__ == '__main__':
     run()

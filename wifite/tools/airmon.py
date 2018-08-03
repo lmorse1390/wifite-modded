@@ -13,6 +13,7 @@ import re
 import os
 import signal
 
+
 class AirmonIface(object):
     def __init__(self, phy, interface, driver, chipset):
         self.phy = phy
@@ -46,7 +47,8 @@ class AirmonIface(object):
         s += 'Driver'.ljust(AirmonIface.DRIVER_LEN)
         s += 'Chipset'.ljust(AirmonIface.CHIPSET_LEN)
         s += '\n'
-        s += '-' * (AirmonIface.INTERFACE_LEN + AirmonIface.PHY_LEN + AirmonIface.DRIVER_LEN + AirmonIface.CHIPSET_LEN + 3)
+        s += '-' * (
+                AirmonIface.INTERFACE_LEN + AirmonIface.PHY_LEN + AirmonIface.DRIVER_LEN + AirmonIface.CHIPSET_LEN + 3)
         return s
 
 
@@ -61,9 +63,9 @@ class Airmon(Dependency):
 
     # Drivers that need to be manually put into monitor mode
     BAD_DRIVERS = ['rtl8821au']
-    #see if_arp.h
-    ARPHRD_ETHER = 1 #managed
-    ARPHRD_IEEE80211_RADIOTAP = 803 #monitor
+    # see if_arp.h
+    ARPHRD_ETHER = 1  # managed
+    ARPHRD_IEEE80211_RADIOTAP = 803  # monitor
 
     def __init__(self):
         self.refresh()
@@ -83,7 +85,6 @@ class Airmon(Dependency):
         if type(index) is str:
             index = int(index)
         return self.interfaces[index - 1]
-
 
     @staticmethod
     def get_interfaces():
@@ -138,7 +139,7 @@ class Airmon(Dependency):
         iface_type_path = os.path.join('/sys/class/net', iface, 'type')
         if os.path.exists(iface_type_path):
             with open(iface_type_path, 'r') as f:
-                if (int(f.read()) == Airmon.ARPHRD_ETHER): 
+                if (int(f.read()) == Airmon.ARPHRD_ETHER):
                     return iface
 
         return None
@@ -211,7 +212,6 @@ class Airmon(Dependency):
 
         return None
 
-
     @staticmethod
     def stop(iface):
         Color.p("{!} {R}disabling {O}monitor mode{O} on {R}%s{O}... " % iface)
@@ -230,7 +230,6 @@ class Airmon(Dependency):
             Color.pl('{O}could not disable on {R}%s{W}' % iface)
 
         return (disabled_iface, enabled_iface)
-
 
     @staticmethod
     def _parse_airmon_stop(airmon_output):
@@ -261,7 +260,6 @@ class Airmon(Dependency):
                 enabled_iface = matches.group(1)
 
         return (disabled_iface, enabled_iface)
-
 
     @staticmethod
     def ask():
@@ -316,7 +314,6 @@ class Airmon(Dependency):
             iface.interface = Airmon.start(iface)
         return iface.interface
 
-
     @staticmethod
     def terminate_conflicting_processes():
         ''' Deletes conflicting processes reported by airmon-ng '''
@@ -334,7 +331,7 @@ class Airmon(Dependency):
             if match:
                 pid = match.group(1)
                 pname = match.group(2)
-                pid_pnames.append( (pid, pname) )
+                pid_pnames.append((pid, pname))
 
         if len(pid_pnames) == 0:
             return
@@ -356,7 +353,6 @@ class Airmon(Dependency):
             else:
                 Color.pl('{!} {R}terminating {O}conflicting process {R}%s{O} (PID {R}%s{O})' % (pname, pid))
                 os.kill(int(pid), signal.SIGTERM)
-
 
     @staticmethod
     def put_interface_up(iface):
@@ -397,6 +393,7 @@ class Airmon(Dependency):
                 return
         else:
             Color.pl(" {R}can't restart NetworkManager: {O}systemctl{R} or {O}service{R} not found{W}")
+
 
 if __name__ == '__main__':
     Airmon.terminate_conflicting_processes()

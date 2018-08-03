@@ -1,6 +1,6 @@
 #!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
-from typing import Any, Union
+# from typing import Any, Union
 
 from ..util.process import Process
 from ..util.color import Color
@@ -80,7 +80,8 @@ class CrackHandshake(object):
             Color.pl("  {O}# See {C}https://github.com/roobixx/cowpatty {O}for more info")
             return
         Color.pl("  {O}# GENPMK/COWPATTY: https://github.com/roobixx/cowpatty. Fast as hell.")
-        Color.pl("  {G}genpmk -d {W}%s{C} -f {W}%s{C} -s {W}\"%s\" %s{C} " % (essid_pmk, self.wordlist, essid_name, cap_file))
+        Color.pl("  {G}genpmk -d {W}%s{C} -f {W}%s{C} -s {W}\"%s\" %s{C} " % (
+            essid_pmk, self.wordlist, essid_name, cap_file))
         Color.pl("  {G}cowpatty -d {W}%s{C} -r {W}%s{C} -s {W}\"%s\"{C}" % (essid_pmk, cap_file, essid_name))
 
     def print_oclhashcat(self, cap_file):

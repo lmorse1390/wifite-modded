@@ -5,6 +5,7 @@ from .dependency import Dependency
 from ..util.process import Process
 import json
 
+
 class Wash(Dependency):
     ''' Wrapper for Wash program. '''
     dependency_required = False
@@ -26,7 +27,7 @@ class Wash(Dependency):
         command = [
             'wash',
             '-f', capfile,
-            '-j' # json
+            '-j'  # json
         ]
 
         p = Process(command)
@@ -36,7 +37,7 @@ class Wash(Dependency):
         except:
             # Failure is acceptable
             return
-        
+
         # Find all BSSIDs
         bssids = set()
         for line in lines.split('\n'):
@@ -53,19 +54,21 @@ class Wash(Dependency):
         for t in targets:
             t.wps = t.bssid.upper() in bssids
 
+
 if __name__ == '__main__':
     test_file = './tests/files/contains_wps_network.cap'
 
     target_bssid = 'A4:2B:8C:16:6B:3A'
     from ..model.target import Target
+
     fields = [
-        'A4:2B:8C:16:6B:3A', # BSSID
-        '2015-05-27 19:28:44', '2015-05-27 19:28:46', # Dates
-        '11', # Channel
-        '54', # throughput
-        'WPA2', 'CCMP TKIP', 'PSK', # AUTH
-        '-58', '2', '0', '0.0.0.0', '9', # ???
-        'Test Router Please Ignore', # SSID
+        'A4:2B:8C:16:6B:3A',  # BSSID
+        '2015-05-27 19:28:44', '2015-05-27 19:28:46',  # Dates
+        '11',  # Channel
+        '54',  # throughput
+        'WPA2', 'CCMP TKIP', 'PSK',  # AUTH
+        '-58', '2', '0', '0.0.0.0', '9',  # ???
+        'Test Router Please Ignore',  # SSID
     ]
     t = Target(fields)
     targets = [t]
@@ -76,4 +79,3 @@ if __name__ == '__main__':
     print('Target(BSSID={}).wps = {} (Expected: True)'.format(targets[0].bssid, targets[0].wps))
 
     assert targets[0].wps == True
-

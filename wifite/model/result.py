@@ -7,6 +7,7 @@ import os
 import time
 from json import loads, dumps
 
+
 class CrackResult(object):
     ''' Abstract class containing results from a crack session '''
 
@@ -37,7 +38,7 @@ class CrackResult(object):
         with open(name, 'w') as fid:
             fid.write(dumps(json, indent=2))
         Color.pl('{+} saved crack result to {C}%s{W} ({G}%d total{W})'
-            % (name, len(json)))
+                 % (name, len(json)))
 
     @classmethod
     def load_all(cls):
@@ -71,21 +72,25 @@ class CrackResult(object):
         result.date = json['date']
         return result
 
+
 if __name__ == '__main__':
     # Deserialize WPA object
     Color.pl('\nCracked WPA:')
-    json = loads('{"bssid": "AA:BB:CC:DD:EE:FF", "essid": "Test Router", "key": "Key", "date": 1433402428, "handshake_file": "hs/capfile.cap", "type": "WPA"}')
+    json = loads(
+        '{"bssid": "AA:BB:CC:DD:EE:FF", "essid": "Test Router", "key": "Key", "date": 1433402428, "handshake_file": "hs/capfile.cap", "type": "WPA"}')
     obj = CrackResult.load(json)
     obj.dump()
 
     # Deserialize WEP object
     Color.pl('\nCracked WEP:')
-    json = loads('{"bssid": "AA:BB:CC:DD:EE:FF", "hex_key": "00:01:02:03:04", "ascii_key": "abcde", "essid": "Test Router", "date": 1433402915, "type": "WEP"}')
+    json = loads(
+        '{"bssid": "AA:BB:CC:DD:EE:FF", "hex_key": "00:01:02:03:04", "ascii_key": "abcde", "essid": "Test Router", "date": 1433402915, "type": "WEP"}')
     obj = CrackResult.load(json)
     obj.dump()
 
     # Deserialize WPS object
     Color.pl('\nCracked WPS:')
-    json = loads('{"psk": "the psk", "bssid": "AA:BB:CC:DD:EE:FF", "pin": "01234567", "essid": "Test Router", "date": 1433403278, "type": "WPS"}')
+    json = loads(
+        '{"psk": "the psk", "bssid": "AA:BB:CC:DD:EE:FF", "pin": "01234567", "essid": "Test Router", "date": 1433403278, "type": "WPS"}')
     obj = CrackResult.load(json)
     obj.dump()

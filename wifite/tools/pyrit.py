@@ -5,6 +5,7 @@ from .dependency import Dependency
 from ..util.process import Process
 import re
 
+
 class Pyrit(Dependency):
     ''' Wrapper for Pyrit program. '''
     dependency_required = False
@@ -58,6 +59,6 @@ class Pyrit(Dependency):
                 # We hit an AP that we care about.
                 # Line does not contain AccessPoint, see if it's "good"
                 if ', good' in line:
-                    bssid_essid_pairs.add( (current_bssid, current_essid) )
+                    bssid_essid_pairs.add((current_bssid, current_essid))
 
         return list(bssid_essid_pairs)

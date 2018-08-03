@@ -11,15 +11,16 @@ from ..model.client import Client
 
 import os, time
 
+
 class Airodump(Dependency):
     ''' Wrapper around airodump-ng program '''
     dependency_required = True
     dependency_name = 'airodump-ng'
     dependency_url = 'https://www.aircrack-ng.org/install.html'
 
-    def __init__(self, interface=None, channel=None, encryption=None,\
-                       wps=False, target_bssid=None, output_file_prefix='airodump',\
-                       ivs_only=False, skip_wps=False, delete_existing_files=True):
+    def __init__(self, interface=None, channel=None, encryption=None, \
+                 wps=False, target_bssid=None, output_file_prefix='airodump', \
+                 ivs_only=False, skip_wps=False, delete_existing_files=True):
         '''Sets up airodump arguments, doesn't start process yet.'''
 
         Configuration.initialize()
@@ -48,10 +49,9 @@ class Airodump(Dependency):
         # For tracking decloaked APs (previously were hidden)
         self.decloaking = False
         self.decloaked_bssids = set()
-        self.decloaked_times = {} # Map of BSSID(str) -> epoch(int) of last deauth
+        self.decloaked_times = {}  # Map of BSSID(str) -> epoch(int) of last deauth
 
         self.delete_existing_files = delete_existing_files
-
 
     def __enter__(self):
         '''
@@ -68,24 +68,27 @@ class Airodump(Dependency):
         command = [
             'airodump-ng',
             self.interface,
-            '-a', # Only show associated clients
-            '-w', self.csv_file_prefix, # Output file prefix
-            '--write-interval', '1' # Write every second
+            '-a',  # Only show associated clients
+            '-w', self.csv_file_prefix,  # Output file prefix
+            '--write-interval', '1'  # Write every second
         ]
-        if self.channel:    command.extend(['-c', str(self.channel)])
-        elif self.five_ghz: command.extend(['--band', 'a'])
+        if self.channel:
+            command.extend(['-c', str(self.channel)])
+        elif self.five_ghz:
+            command.extend(['--band', 'a'])
 
         if self.encryption:   command.extend(['--enc', self.encryption])
         if self.wps:          command.extend(['--wps'])
         if self.target_bssid: command.extend(['--bssid', self.target_bssid])
 
-        if self.ivs_only: command.extend(['--output-format', 'ivs,csv'])
-        else:             command.extend(['--output-format', 'pcap,csv'])
+        if self.ivs_only:
+            command.extend(['--output-format', 'ivs,csv'])
+        else:
+            command.extend(['--output-format', 'pcap,csv'])
 
         # Start the process
         self.pid = Process(command, devnull=True)
         return self
-
 
     def __exit__(self, type, value, traceback):
         '''
@@ -97,7 +100,6 @@ class Airodump(Dependency):
 
         if self.delete_existing_files:
             self.delete_airodump_temp_files(self.output_file_prefix)
-
 
     def find_files(self, endswith=None):
         return self.find_files_by_output_prefix(self.output_file_prefix, endswith=endswith)
@@ -186,7 +188,6 @@ class Airodump(Dependency):
 
         return self.targets
 
-
     @staticmethod
     def get_targets_from_csv(csv_filename):
         '''Returns list of Target objects parsed from CSV file.'''
@@ -199,10 +200,10 @@ class Airodump(Dependency):
                 line = line.replace('\0', '')
                 lines.append(line)
             csv_reader = csv.reader(lines,
-                    delimiter=',',
-                    quoting=csv.QUOTE_ALL,
-                    skipinitialspace=True,
-                    escapechar='\\')
+                                    delimiter=',',
+                                    quoting=csv.QUOTE_ALL,
+                                    skipinitialspace=True,
+                                    escapechar='\\')
 
             hit_clients = False
             for row in csv_reader:
@@ -259,7 +260,7 @@ class Airodump(Dependency):
             if 'WEP' in Configuration.encryption_filter and 'WEP' in target.encryption:
                 result.append(target)
             elif 'WPA' in Configuration.encryption_filter and 'WPA' in target.encryption:
-                    result.append(target)
+                result.append(target)
             elif 'WPS' in Configuration.encryption_filter and target.wps:
                 result.append(target)
             elif skip_wps:
@@ -270,7 +271,9 @@ class Airodump(Dependency):
         essid = Configuration.target_essid
         i = 0
         while i < len(result):
-            if result[i].essid is not None and Configuration.ignore_essid is not None and Configuration.ignore_essid.lower() in result[i].essid.lower():
+            if result[
+                i].essid is not None and Configuration.ignore_essid is not None and Configuration.ignore_essid.lower() in \
+                    result[i].essid.lower():
                 result.pop(i)
             elif bssid and result[i].bssid.lower() != bssid.lower():
                 result.pop(i)
@@ -296,8 +299,8 @@ class Airodump(Dependency):
         # Reusable deauth command
         deauth_cmd = [
             'aireplay-ng',
-            '-0', # Deauthentication
-            str(Configuration.num_deauths), # Number of deauth packets to send
+            '-0',  # Deauthentication
+            str(Configuration.num_deauths),  # Number of deauth packets to send
             '--ignore-negative-one'
         ]
 
@@ -325,11 +328,13 @@ class Airodump(Dependency):
             for client in target.clients:
                 Process(deauth_cmd + ['-a', target.bssid, '-c', client.bssid, iface])
 
+
 if __name__ == '__main__':
     ''' Example usage. wlan0mon should be in Monitor Mode '''
     with Airodump() as airodump:
 
         from time import sleep
+
         sleep(7)
 
         from ..util.color import Color

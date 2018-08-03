@@ -85,7 +85,7 @@ class Configuration(object):
             '/usr/share/fuzzdb/wordlists-user-passwd/passwds/phpbb.txt',
             '/usr/share/wordlists/fern-wifi/common.txt',
             '%fern-wifi%/common.txt',
-            '../common_wpa_sec.txt'
+            'common_wpa_sec.txt'
         ]
         for wlist in wordlists:
             if os.path.exists(wlist):
@@ -174,6 +174,10 @@ class Configuration(object):
         if args.kill_conflicting_processes:
             cls.kill_conflicting_processes = True
             Color.pl('{+} {C}option:{W} kill conflicting processes {G}enabled{W}')
+        if args.no_chill_timer:
+            cls.no_chill_timer = args.no_chill_timer
+            Color.pl(
+                '{+} {C}option:{W}  stop attack if no clients have been identified after {G}%d secs{W}' % args.no_chill_timer)
 
         # WEP
         if args.wep_filter:

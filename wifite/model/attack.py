@@ -3,6 +3,7 @@
 
 import time
 
+
 class Attack(object):
     '''Contains functionality common to all attacks.'''
 
@@ -38,4 +39,3 @@ class Attack(object):
                 'Could not find target (%s) in airodump' % self.target.bssid)
 
         return airodump_target
-

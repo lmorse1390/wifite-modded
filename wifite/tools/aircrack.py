@@ -8,6 +8,7 @@ from ..config import Configuration
 
 import os
 
+
 class Aircrack(Dependency):
     dependency_required = True
     dependency_name = 'aircrack-ng'
@@ -16,8 +17,8 @@ class Aircrack(Dependency):
     def __init__(self, ivs_file=None):
 
         self.cracked_file = os.path.abspath(
-                os.path.join(
-                    Configuration.temp(), 'wepkey.txt'))
+            os.path.join(
+                Configuration.temp(), 'wepkey.txt'))
 
         # Delete previous cracked files
         # TODO: Check for a zip with a static nam, if found insert new HS into zip, othersie write them to dest
@@ -35,7 +36,6 @@ class Aircrack(Dependency):
         command.extend(ivs_file)
 
         self.pid = Process(command, devnull=True)
-
 
     def is_running(self):
         return self.pid.poll() is None
@@ -62,11 +62,11 @@ class Aircrack(Dependency):
         hex_chars = []
         ascii_key = ''
         for index in xrange(0, len(hex_raw), 2):
-            byt = hex_raw[index:index+2]
+            byt = hex_raw[index:index + 2]
             hex_chars.append(byt)
             byt_int = int(byt, 16)
             if byt_int < 32 or byt_int > 127 or ascii_key is None:
-                ascii_key = None # Not printable
+                ascii_key = None  # Not printable
             else:
                 ascii_key += chr(byt_int)
 
@@ -77,6 +77,7 @@ class Aircrack(Dependency):
     def __del__(self):
         if os.path.exists(self.cracked_file):
             os.remove(self.cracked_file)
+
 
 if __name__ == '__main__':
     (hexkey, asciikey) = Aircrack._hex_and_ascii_key('A1B1C1D1E1')

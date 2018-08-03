@@ -7,12 +7,11 @@ class Dependency(object):
     # https://stackoverflow.com/a/49024227
     def __init_subclass__(cls):
         for attr_name in cls.required_attr_names:
-            if not attr_name in cls.__dict__:
+            if attr_name not in cls.__dict__:
                 raise NotImplementedError(
                     "Attribute '{}' has not been overriden in class '{}'" \
-                    .format(attr_name, cls.__name__)
+                        .format(attr_name, cls.__name__)
                 )
-
 
     @classmethod
     def fails_dependency_check(cls):

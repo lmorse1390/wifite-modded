@@ -3,6 +3,7 @@
 
 from .dependency import Dependency
 
+
 class Iwconfig(Dependency):
     dependency_required = True
     dependency_name = 'iwconfig'
@@ -13,7 +14,6 @@ class Iwconfig(Dependency):
         from ..util.process import Process
         return Process.exists('iwconfig')
 
-
     @classmethod
     def mode(cls, iface, mode_name):
         from ..util.process import Process
@@ -22,7 +22,6 @@ class Iwconfig(Dependency):
         pid.wait()
 
         return pid.poll()
-
 
     @classmethod
     def get_interfaces(cls, mode=None):
@@ -45,4 +44,3 @@ class Iwconfig(Dependency):
                 interfaces.add(iface)
 
         return list(interfaces)
-

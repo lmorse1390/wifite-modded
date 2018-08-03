@@ -5,6 +5,7 @@ from wifite.tools.airodump import Airodump
 
 import unittest
 
+
 class TestTarget(unittest.TestCase):
     ''' Test suite for Target parsing an generation '''
 
@@ -22,14 +23,15 @@ class TestTarget(unittest.TestCase):
     def testTargetParsing(self):
         ''' Asserts target parsing finds targets '''
         targets = self.getTargets(TestTarget.airodump_csv)
-        assert(len(targets) > 0)
+        assert (len(targets) > 0)
 
     def testTargetClients(self):
         ''' Asserts target parsing captures clients properly '''
         targets = self.getTargets(TestTarget.airodump_csv)
         for t in targets:
             if t.bssid == '00:1D:D5:9B:11:00':
-                assert(len(t.clients) > 0)
+                assert (len(t.clients) > 0)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import sys
+
 sys.path.insert(0, '..')
 
 from wifite.tools.airmon import Airmon
 
 import unittest
+
 
 class TestAirmon(unittest.TestCase):
     def test_airmon_start(self):
@@ -20,5 +22,5 @@ phy0    wlan0        iwlwifi        Intel Corporation Centrino Ultimate-N 6300 (
         (mac80211 station mode vif disabled for [phy0]wlan0)
 '''
         mon_iface = Airmon._parse_airmon_start(stdout)
-        assert mon_iface == 'wlan0mon', 'Expected monitor-mode interface to be "wlan0mon" but got "{}"'.format(mon_iface)
-
+        assert mon_iface == 'wlan0mon', 'Expected monitor-mode interface to be "wlan0mon" but got "{}"'.format(
+            mon_iface)
