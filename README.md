@@ -1,7 +1,7 @@
 Wifite 2
 ========
 
-A mod of the ongoing re-write of [`wifite`](https://github.com/derv82/wifite), a Python script for auditing wireless networks.
+A mod of the ongoing re-write of [`wifite`](https://github.com/derv82/wifite2), a Python script for auditing wireless networks.
 
 Wifite runs existing wireless-auditing tools for you. Stop memorizing command arguments & switches!
 
