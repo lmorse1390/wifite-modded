@@ -139,8 +139,12 @@ Various cracking options (using `--crack` option):
 
 Credits
 -----------
-[Shout out to the man derv82](https://github.com/derv82/wifite2)
-[wiire-a](https://github.com/wiire-a)
-[t6x](https://github.com/t6x)
-[aanarchyy](https://github.com/aanarchyy/bully)
-[aircrack-ng](https://github.com/aircrack-ng/aircrack-ng)
+* [the man: derv82](https://github.com/derv82/wifite2)
+
+* [wiire-a](https://github.com/wiire-a)
+
+* [t6x](https://github.com/t6x)
+
+* [aanarchyy](https://github.com/aanarchyy/bully)
+
+* [aircrack-ng](https://github.com/aircrack-ng/aircrack-ng)
