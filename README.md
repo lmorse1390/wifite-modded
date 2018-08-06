@@ -67,10 +67,8 @@ Other pen-testing distributions (such as BackBox) have outdated versions of the 
 
 (wifite-mod supports backbox 100% given you are using katoolin to install the required tools)
 
-Whats being worked on?
+Whats unique to wifite-modded, whats coming down the line?
 --------------
-
-Whats coming down the road?
 
 * Implemntation of a database to keep record of cracked pins, BSSIDs that have been discovered, cracked hashes..etc.
   * The goal being not to scrape data unnecessarily & repeatedly.
@@ -78,6 +76,7 @@ Whats coming down the road?
 * Wash to ID easy targets
 * Ability to use MDK4 given you have you 2 adapters capable of packet injection.
 * WPS-Pixie Attacks that result in lockouts, just skip it, no sense in being throttled.
+* Pulling down the latest cracked pass list from [stanev](https://wpa-sec.stanev.org/) if you dont provide one yourself.
 * Got a Request? Contact me.
 
 Required Tools
@@ -106,6 +105,7 @@ Only the latest versions of these programs are supported:
    * Bully is also used to fetch PSK if `reaver` cannot after cracking WPS PIN.
 * `cowpatty`: For detecting handshake captures.
 * `pyrit`: For detecting handshake captures.
+* `genpmk`: For precomputing hashes, ideal for those with low end systems and plenty of time.
 
 Installing & Running
 --------------------
@@ -136,4 +136,11 @@ Cracking a weak WEP password (using the WEP Replay attack):
 Various cracking options (using `--crack` option):
 ![--crack option](http://i.imgur.com/rydOakW.png)
 
+
+Credits
+-----------
 [Shout out to the man derv82](https://github.com/derv82/wifite2)
+[wiire-a](https://github.com/wiire-a)
+[t6x](https://github.com/t6x)
+[aanarchyy](https://github.com/aanarchyy/bully)
+[aircrack-ng](https://github.com/aircrack-ng/aircrack-ng)
