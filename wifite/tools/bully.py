@@ -43,6 +43,7 @@ class Bully(Attack, Dependency):
             "bully",
             "--bssid", target.bssid,
             "--channel", target.channel,
+			"--pin", "", #Bullly autofills this with 0's
             "--detectlock",  # Detect WPS lockouts unreported by AP
             "--force",
             "-v", "4",

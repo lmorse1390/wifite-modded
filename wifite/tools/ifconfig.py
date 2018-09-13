@@ -16,17 +16,20 @@ class Ifconfig(Dependency):
         '''Put interface up'''
         from ..util.process import Process
 
-        command = ['ifconfig', interface]
-        if type(args) is list:
-            command.extend(args)
-        elif type(args) is 'str':
-            command.append(args)
-        command.append('up')
-
-        pid = Process(command)
+        pid = Process(['ifconfig', interface, 'down'])
         pid.wait()
-        if pid.poll() != 0:
-            raise Exception('Error putting interface %s up:\n%s\n%s' % (interface, pid.stdout(), pid.stderr()))
+        if pid.poll() is None:
+			command = ['ifconfig', interface]
+			if type(args) is list:
+				command.extend(args)
+			elif type(args) is 'str':
+				command.append(args)
+			command.append('up')
+
+			pid = Process(command)
+			pid.wait()
+			if pid.poll() != 0:
+				raise Exception('Error putting interface %s up:\n%s\n%s' % (interface, pid.stdout(), pid.stderr()))
 
     @classmethod
     def down(cls, interface):
@@ -37,6 +40,9 @@ class Ifconfig(Dependency):
         pid.wait()
         if pid.poll() != 0:
             raise Exception('Error putting interface %s down:\n%s\n%s' % (interface, pid.stdout(), pid.stderr()))
+        else:
+			pid = Process(['iw reg set BO'])
+			pid.wait()
 
     @classmethod
     def get_mac(cls, interface):

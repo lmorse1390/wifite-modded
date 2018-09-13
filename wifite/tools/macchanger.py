@@ -54,7 +54,7 @@ class Macchanger(Dependency):
         iface = cls.get_interface()
         Color.pl('\r{+} {C}macchanger{W}: resetting mac address on %s...' % iface)
         # -p to reset to permanent MAC address
-        if cls.down_macch_up(iface, ['-p']):
+        if cls.down_macch_up(iface, ['-r']):
             new_mac = Ifconfig.get_mac(iface)
 
             Color.clear_entire_line()
@@ -72,12 +72,12 @@ class Macchanger(Dependency):
 
         # -r to use random MAC address
         # -e to keep vendor bytes the same
-        if cls.down_macch_up(iface, ['-e']):
-            cls.is_changed = True
-            new_mac = Ifconfig.get_mac(iface)
+        #if cls.down_macch_up(iface, ['-R']):
+        #    cls.is_changed = True
+        #    new_mac = Ifconfig.get_mac(iface)
 
-            Color.clear_entire_line()
-            Color.pl('\r{+} {C}macchanger{W}: changed mac address to {C}%s{W} on {C}%s{W}' % (new_mac, iface))
+        #    Color.clear_entire_line()
+        #    Color.pl('\r{+} {C}macchanger{W}: changed mac address to {C}%s{W} on {C}%s{W}' % (new_mac, iface))
 
     @classmethod
     def reset_if_changed(cls):

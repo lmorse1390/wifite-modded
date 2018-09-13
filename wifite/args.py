@@ -327,9 +327,17 @@ class Arguments(object):
                          action='store_true',
                          dest='use_bully',
                          help=Color.s(
-                             'Use {C}bully{W} instead of {C}reaver{W} for WPS attacks (default: {G}reaver{W})'))
-        # Alias
+                             'Use {C}bully{W} will be used instead of instead of {C}reaver{W} for WPS attacks (default: {G}bullly{W})'))
+        # Alias Bully
         wps.add_argument('-bully', help=argparse.SUPPRESS, action='store_true', dest='use_bully')
+        
+        wps.add_argument('--reaver',
+                         action='store_true',
+                         dest='use_reaver',
+                         help=Color.s(
+                             'Use {C}reaver{W} will be used instead of {C}bully{W} for WPS attacks (default: {G}bully{W})'))
+        # Alias Reaver
+        wps.add_argument('-reaver', help=argparse.SUPPRESS, action='store_true', dest='use_reaver')
 
         wps.add_argument('--no-wps',
                          action='store_true',

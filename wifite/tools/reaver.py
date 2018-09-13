@@ -40,6 +40,8 @@ class Reaver(Attack, Dependency):
             'reaver',
             '--interface', Configuration.interface,
             '--bssid', self.target.bssid,
+			'--pin=','',
+			'--no-nacks',
             '--channel', self.target.channel,
             '--pixie-dust', '1',  # pixie-dust attack
             '--session', '/dev/null',  # Don't restart session

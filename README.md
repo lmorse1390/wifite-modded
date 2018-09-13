@@ -1,7 +1,22 @@
 Wifite 2
 ========
 
-A mod of the ongoing re-write of [`wifite`](https://github.com/derv82/wifite2), a Python script for auditing wireless networks.
+A mod of the on-going re-write of [`wifite`](https://github.com/derv82/wifite2), a Python script for auditing wireless networks.
+
+Whats unique to wifite-modded?
+--------------
+* Reaver/Bully null WPS pin attacks, produces more results than random pins.
+   * `bully`: is more effective as it floods APs.
+   * `reaver`: is the solution for stubborn APs that dont respond to reaver.
+   * (flags for both, you decide)
+
+* genPMK added as a cracking option, the ideal solution for someone with low/no GPUU and decent ram and time.
+
+* `max tx pwr`: For those in countries that legally allow it. I take no responsibility for anyone that chooses to ignore regdb laws.
+--------------
+
+Required Tools
+--------------
 
 Wifite runs existing wireless-auditing tools for you. Stop memorizing command arguments & switches!
 
@@ -63,24 +78,7 @@ Wifite2 is designed specifically for the latest version of **Kali**'s rolling re
 
 Parrot OS is supported of course too.
 
-Other pen-testing distributions (such as BackBox) have outdated versions of the tools used by Wifite; these distributions are not supported.
-
 (wifite-mod supports backbox 100% given you are using katoolin to install the required tools)
-
-Whats unique to wifite-modded, whats coming down the line?
---------------
-
-* Implemntation of a database to keep record of cracked pins, BSSIDs that have been discovered, cracked hashes..etc.
-  * The goal being not to scrape data unnecessarily & repeatedly.
-* Reaver null WPS pin exploit
-* Wash to ID easy targets
-* Ability to use MDK4 given you have you 2 adapters capable of packet injection.
-* WPS-Pixie Attacks that result in lockouts, just skip it, no sense in being throttled.
-* Pulling down the latest cracked pass list from [stanev](https://wpa-sec.stanev.org/) if you dont provide one yourself.
-* Got a Request? Contact me.
-
-Required Tools
---------------
 
 Only the latest versions of these programs are supported:
 

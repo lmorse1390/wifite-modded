@@ -97,6 +97,7 @@ class Configuration(object):
         cls.no_wps = False  # Do not use WPS attacks (Pixie-Dust & PIN attacks)
         cls.wps_only = False  # ONLY use WPS attacks on non-WEP networks
         cls.use_bully = True  # Use bully instead of reaver - DEFAULT
+        cls.use_reaver = False
         cls.wps_pixie_timeout = 300  # Seconds to wait for PIN before WPS Pixie attack fails
         cls.wps_fail_threshold = 100  # Max number of failures
         cls.wps_timeout_threshold = 100  # Max number of timeouts
@@ -246,6 +247,9 @@ class Configuration(object):
         if args.use_bully:
             cls.use_bully = args.use_bully
             Color.pl('{+} {C}option:{W} use {C}bully{W} instead of {C}reaver{W} for WPS Attacks')
+        if args.use_reaver:
+            cls.use_reaver = args.use_reaver
+            Color.pl('{+} {C}option:{W} use {C}reaver{W} instead of {C}bully{W} for WPS Attacks')
         if args.wps_pixie_timeout:
             cls.wps_pixie_timeout = args.wps_pixie_timeout
             Color.pl(
@@ -336,8 +340,9 @@ class Configuration(object):
         Macchanger.reset_if_changed()
         from .tools.airmon import Airmon
         if cls.interface is not None and Airmon.base_interface is not None:
-            Color.pl('{!} Leaving interface {C}%s{W} in Monitor Mode.' % cls.interface)
-            Color.pl('{!} You can disable Monitor Mode when finished ({C}airmon-ng stop %s{W})' % cls.interface)
+			#pid = Process(['ifconfig', cls.interface, 'down'])
+			#pid.wait()
+            #Color.pl('{!} You can disable Monitor Mode when finished ({C}airmon-ng stop %s{W})' % cls.interface)
 
             # Stop monitor mode
             Airmon.stop(cls.interface)

@@ -19,6 +19,7 @@ class Iwconfig(Dependency):
         from ..util.process import Process
 
         pid = Process(['iwconfig', iface, 'mode', mode_name])
+        pid.extend(['iwconfig', interface, 'txpower 30'])
         pid.wait()
 
         return pid.poll()
